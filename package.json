@@ -1,0 +1,31 @@
+{
+  "name": "bienes_aprehendidos",
+  "version": "1.0.0",
+  "description": "Aplicación de bienes incautados",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZelayaDev/bienes_aprehendidos.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZelayaDev/bienes_aprehendidos/issues"
+  },
+  "homepage": "https://github.com/ZelayaDev/bienes_aprehendidos#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "knex": "^0.21.17",
+    "moment": "^2.29.1",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.7"
+  }
+}
