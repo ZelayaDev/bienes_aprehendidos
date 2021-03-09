@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const {getAllBases, getBasesbyIdRegion,  insertBases, updateBases} = require('./model');
+const {getAllBases, getBasesbyIdRegion,  insertBases, updateBases, validarRegion} = require('./model');
 
 router.get("/", async (req, res)  => {
    console.log(req.query)
@@ -13,8 +13,12 @@ router.get("/", async (req, res)  => {
   
 }).post("/", async (req, res) => {
     console.log(req.body)
+
     const {id_region, id_provincia, id_tipologia, id_zona, nombre_Base, orden_base} = req.body; 
     const status = 1;
+    const verificaRegion = await validarRegion(id_region);
+    if (verificaRegion) return res.status(400).json("Verifique Region")
+
     try {
         await insertBases(id_region, id_provincia, id_tipologia, id_zona, nombre_Base, orden_base, status)
         res.status(200).json("Registro Creado")
@@ -32,7 +36,6 @@ router.get("/", async (req, res)  => {
         res.status(500).json("Error")
     }
 })
-
 
 
 module.exports = router;

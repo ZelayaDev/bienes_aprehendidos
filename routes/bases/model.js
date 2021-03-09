@@ -69,7 +69,21 @@ const updateBases = (id_region, id_provincia, id_tipologia, id_zona, nombre_Base
     })
 }
 
+const validarRegion = (id_region) => {
+    if (id_region) {
+        const region_id = parseInt(id_region)
+        return database.select("*").from("regiones_aeronaval").where("Id_Region_Aeronaval", "=", region_id)
+        .then(region => {
+            if (region.length){
+                if (region[0].Estatus_Region === 0) return "Region esta desactivada";
+                return "Region Existe";
+            } else return "Region no existe";
+        })
+    }else return "Valor de Region incorrecto";
+}   
+
 module.exports.getAllBases = getAllBases;
 module.exports.getBasesbyIdRegion = getBasesbyIdRegion;
 module.exports.insertBases = insertBases;
 module.exports.updateBases = updateBases;
+module.exports.validarRegion = validarRegion;
