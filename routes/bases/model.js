@@ -35,5 +35,41 @@ const getBasesbyIdRegion = async (id_region) => {
     })
 }
 
+const insertBases = async (id_region, id_provincia, id_tipologia, id_zona, nombre_Base, orden_base, status) =>{
+    return database("bases_aeronaval").insert({
+        Id_Region:id_region,
+        Id_Provincia:id_provincia,
+        Id_Tipologia: id_tipologia,
+        Id_Zona: id_zona,
+        Nombre_Base: nombre_Base,
+        Orden_Base: orden_base,
+        Estatus_Base:status
+    }).then(response => {
+        return response
+    }).catch(error => {
+        console.log(error)
+        return error
+    })
+}
+
+
+const updateBases = (id_region, id_provincia, id_tipologia, id_zona, nombre_Base, orden_base, id_base) => {
+    return database("bases_aeronaval").where("Id_Bases_Aeronaval","=",id_base).update({
+        Id_Region:id_region,
+        Id_Provincia:id_provincia,
+        Id_Tipologia: id_tipologia,
+        Id_Zona: id_zona,
+        Nombre_Base: nombre_Base,
+        Orden_Base: orden_base
+    }).then(response => {
+        return response
+    }).catch(error => {
+        console.log(error)
+        return error
+    })
+}
+
 module.exports.getAllBases = getAllBases;
 module.exports.getBasesbyIdRegion = getBasesbyIdRegion;
+module.exports.insertBases = insertBases;
+module.exports.updateBases = updateBases;

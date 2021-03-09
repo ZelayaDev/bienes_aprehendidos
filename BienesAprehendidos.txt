@@ -1,0 +1,7 @@
+Id_Region
+Id_Provincia
+Id_Tipologia
+Id_Zona
+
+Estatus_Base default=1
+Nombre_Base default = 
