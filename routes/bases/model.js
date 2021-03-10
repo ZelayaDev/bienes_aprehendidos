@@ -1,3 +1,4 @@
+const { response } = require("express");
 const { database } = require("../../database/database");
 
 const getAllBases = async () => {
@@ -160,8 +161,32 @@ const validarBases = (texto) => {
     .catch((err) => err);
 };
 
+const activaDesactivaBase = (id_base) => {
+  return database
+    .select("*")
+    .from("bases_aeronaval")
+    .where("Id_Base", "=", id_base)
+    .then((base) => {
+      if (base.length === 0) return "Base no existe";
+      return database("bases_aeronaval")
+        .where("Id_Bases_Aeronaval", "=", id_base)
+        .update({
+          Estatus_Base: base[0].Estatus_Base === 1 ? 0 : 1,
+        })
+        .then((response) => {
+          console.log("response", response);
+          return response;
+        })
+        .catch((error) => {
+          console.log(error);
+          return error;
+        });
+    });
+};
+
 module.exports.getAllBases = getAllBases;
 module.exports.getBasesbyIdRegion = getBasesbyIdRegion;
 module.exports.insertBases = insertBases;
 module.exports.updateBases = updateBases;
 module.exports.validarBases = validarBases;
+module.exports.activaDesactivaBase = activaDesactivaBase;

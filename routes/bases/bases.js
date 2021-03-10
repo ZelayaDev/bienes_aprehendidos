@@ -5,6 +5,7 @@ const {
   insertBases,
   updateBases,
   validarBases,
+  activaDesactivaBase,
 } = require("./model");
 
 router
@@ -74,8 +75,20 @@ router
         update === "orden ya existe" ||
         update === 0
       )
-        return res.status(400).json(update === 0 ? "error en update" : update);
+        return res
+          .status(400)
+          .json(update === 0 ? "Error en la Actualizacion" : update);
       res.status(200).json("Registro actualizado");
+    } catch (error) {
+      res.status(500).json("Error");
+    }
+  })
+  .delete("/", async (req, res) => {
+    const { id_base } = req.body;
+    try {
+      const desactivacion = await activaDesactivaBase(id_base);
+      if (!desactivacion) return res.status(400).json("Error en desactivacion");
+      res.status(200).json("Desactivacion completa");
     } catch (error) {
       res.status(500).json("Error");
     }
