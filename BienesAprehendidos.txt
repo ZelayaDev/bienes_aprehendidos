@@ -3,5 +3,23 @@ Id_Provincia
 Id_Tipologia
 Id_Zona
 
+Creacion de Registro
 Estatus_Base default=1
-Nombre_Base default = 
+
+Validacion de Bases al momento de accesar la tabla 
+bases_aeronaval
+
+Insert
+1. Que la base no exista
+2. Que la base este Activa (Estatus_Base = 1) 
+
+
+Eliminar 
+1. Que la Base Exista (cambio de Estatus_Base)
+
+
+Busqueda en la tabla
+1. Que la Base exista
+2. Que la Base este activa(Estatus_Base = 1)
+
+
