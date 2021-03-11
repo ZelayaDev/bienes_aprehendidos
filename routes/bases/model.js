@@ -120,12 +120,14 @@ const updateBases = (
     .select("*")
     .from("bases_aeronaval")
     .where("Nombre_Base", "=", nombre_Base)
+    .andWhere("Id_Bases_Aeronaval", "<>", id_base)
     .then((respuesta) => {
       if (respuesta.length > 0) return "base ya existe";
       return database
         .select("*")
         .from("bases_aeronaval")
         .where("Orden_Base", "=", orden_base)
+        .andWhere("Id_Bases_Aeronaval", "<>", id_base)
         .then((response) => {
           if (response.length > 0) return "orden ya existe";
           return database("bases_aeronaval")

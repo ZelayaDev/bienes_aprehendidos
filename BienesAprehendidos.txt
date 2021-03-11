@@ -9,6 +9,12 @@ Estatus_Base default=1
 Validacion de Bases al momento de accesar la tabla 
 bases_aeronaval
 
+
+getAllBases :		Devuelve todas las bases desde la tabla Bases_Aeronaval
+getBasesbyIdRegion : 	Devuelve las Bases por Id de Region
+InserBases: 		Ordena por Orden_Bases, trae el valor maximo de Orden_Bases 
+			Si no hay registros empieza en 1 y si hay valores suma 0.5	
+
 Insert
 1. Que la base no exista
 2. Que la base este Activa (Estatus_Base = 1) 
