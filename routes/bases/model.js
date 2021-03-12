@@ -186,9 +186,19 @@ const activaDesactivaBase = (id_base) => {
     });
 };
 
+const getbaseById = (id_base) => {
+  return database
+    .select("*")
+    .from("bases_aeronaval")
+    .where("Id_Bases_Aeronaval", "=", id_base)
+    .then((base) => base)
+    .catch((error) => error);
+};
+
 module.exports.getAllBases = getAllBases;
 module.exports.getBasesbyIdRegion = getBasesbyIdRegion;
 module.exports.insertBases = insertBases;
 module.exports.updateBases = updateBases;
 module.exports.validarBases = validarBases;
 module.exports.activaDesactivaBase = activaDesactivaBase;
+module.exports.getbaseById = getbaseById;

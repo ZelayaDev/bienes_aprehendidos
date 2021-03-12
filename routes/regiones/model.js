@@ -93,7 +93,17 @@ const activaDesactivaRegion = (id_region) => {
     });
 };
 
+const getregionById = (id_region) => {
+  return database
+    .select("*")
+    .from("regiones_aeronaval")
+    .where("Id_Region_Aeronaval", "=", id_region)
+    .then((region) => region)
+    .catch((error) => error);
+};
+
 module.exports.getAllRegion = getAllRegion;
 module.exports.insertRegiones = insertRegiones;
 module.exports.updateRegiones = updateRegiones;
 module.exports.activaDesactivaRegion = activaDesactivaRegion;
+module.exports.getregionById = getregionById;

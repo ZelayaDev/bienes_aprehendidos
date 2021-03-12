@@ -4,12 +4,20 @@ const {
   insertRegiones,
   updateRegiones,
   activaDesactivaRegion,
+  getregionById,
 } = require("./model");
 
 router
   .get("/", async (req, res) => {
-    const regiones = await getAllRegion();
-    res.status(200).json(regiones);
+    const { id_region } = req.query;
+    try {
+      const query = id_region
+        ? await getregionById(id_region)
+        : await getAllRegion();
+      res.status(200).json(query);
+    } catch (error) {
+      res.status(500).json("Error");
+    }
   })
   .post("/", async (req, res) => {
     const { nombre_region } = req.body;

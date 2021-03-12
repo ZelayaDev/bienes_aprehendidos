@@ -6,17 +6,18 @@ const {
   updateBases,
   validarBases,
   activaDesactivaBase,
+  getbaseById,
 } = require("./model");
 
 router
   .get("/", async (req, res) => {
-    console.log(req.query);
-    if (req.query === "region") {
-      const bases = await getBasesbyIdRegion(req.query.region);
-      res.status(200).json(bases);
-    } else {
-      const bases = await getAllBases();
-      res.status(200).json(bases);
+    const { id_base } = req.query;
+
+    try {
+      const query = id_base ? await getbaseById(id_base) : await getAllBases();
+      res.status(200).json(query);
+    } catch (error) {
+      res.status(500).json("Error");
     }
   })
   .post("/", async (req, res) => {
