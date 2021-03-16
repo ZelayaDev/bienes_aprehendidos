@@ -1,3 +1,4 @@
+const { response } = require("express");
 const { database } = require("../../database/database");
 
 const getAllTipologia = async () => {
@@ -28,20 +29,20 @@ const insertTipologia = async (abreviatura, descripcion) => {
     .max("Orden_Tipologia as orden")
     .from("tipologia_aeronaval")
     .then((response) => {
-      //   return database("tipologia_aeronaval")
-      //     .insert({
-      //       Orden_Tipologia: response.length === 0 ? 1 : response[0].orden + 0.5,
-      //       Estatus_Tipologia: 1,
-      //       Abreviatura_Tipologia: abreviatura,
-      //       Descripcion_Tipologia: descripcion,
-      //     })
-      //     .then((response) => {
-      //       return response;
-      //     })
-      //     .catch((error) => {
-      //       console.log(error);
-      //       return error;
-      //     });
+         return database("tipologia_aeronaval")
+           .insert({
+             Orden_Tipologia: response.length === 0 ? 1 : response[0].orden + 0.5,
+             Estatus_Tipologia: 1,
+             Abreviatura_Tipologia: abreviatura,
+             Descripcion_Tipologia: descripcion,
+           })
+           .then((response) => {
+             return response;
+           })
+           .catch((error) => {
+             console.log(error);
+             return error;
+           });
     })
     .catch((err) => err);
 };
@@ -64,11 +65,11 @@ const updateTipologia = (id_tipologia, orden, abreviatura, descripcion) => {
           return database
             .select("*")
             .from("tipologia_aeronaval")
-            .where("Abreviatura_tipologia", "=", abreviatura)
+            .where("Abreviatura_Tipologia", "=", abreviatura)
             .andWhere("Id_Tipologia_Aeronaval", "<>", id_tipologia)
             .then((res) => {
               if (res.length > 0) return "Abreviatura ya existe";
-              return database("bases_aeronaval")
+              return database("tipologia_aeronaval")
                 .where("Id_Tipologia_Aeronaval", "=", id_tipologia)
                 .update({
                   Orden_Tipologia: orden,
@@ -77,7 +78,7 @@ const updateTipologia = (id_tipologia, orden, abreviatura, descripcion) => {
                 })
                 .then((tipologia) => {
                   console.log("response", tipologia);
-                  return tipologia;
+                  return res;
                 })
                 .catch((error) => {
                   console.log(error);
@@ -114,8 +115,18 @@ const activaDesactivaTipologia = (id_tipologia) => {
     });
 };
 
+const validarTipologia = (texto) => {
+  return database
+    .select("*")
+    .from("tipologia_aeronaval")
+    .where("Descripcion_Tipologia", "=", texto)
+    .then((respuesta) => respuesta)
+    .catch((err) => err);
+};
+
 module.exports.getAllTipologia = getAllTipologia;
 module.exports.getTipologiabyId = getTipologiabyId;
 module.exports.insertTipologia = insertTipologia;
 module.exports.updateTipologia = updateTipologia;
+module.exports.validarTipologia = validarTipologia;
 module.exports.activaDesactivaTipologia = activaDesactivaTipologia;
