@@ -54,6 +54,17 @@ router
     } catch (error) {
       res.status(500).json("Error");
     }
+  })
+  .delete("/", async (req, res) => {
+    const { id_zona } = req.body;
+    console.log(req.body);
+    try {
+      const desactivacion = await activaDesactivaZonas(id_zona);
+      if (!desactivacion) return res.status(400).json("Error en desactivacion");
+      res.status(200).json("Desactivacion completa");
+    } catch (error) {
+      res.status(500).json("Error");
+    }
   });
 
 module.exports = router;

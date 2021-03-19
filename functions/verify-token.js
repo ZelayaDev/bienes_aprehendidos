@@ -5,7 +5,8 @@ module.exports = function (req, res, next) {
   const token = authHeader && authHeader.split(" ")[1];
   if (token == null) return res.status(401).json("No esta autorizado");
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, user) => {
+    console.log(err);
     if (err) return res.status(401).json("No esta autorizado");
     req.user = user;
     next();

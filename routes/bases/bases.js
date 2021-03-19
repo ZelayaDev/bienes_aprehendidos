@@ -1,4 +1,5 @@
 const router = require("express").Router();
+//const verify = require("../../functions/verify-token");
 const {
   getAllBases,
   getBasesbyIdRegion,
@@ -12,7 +13,6 @@ const {
 router
   .get("/", async (req, res) => {
     const { id_base } = req.query;
-
     try {
       const query = id_base ? await getbaseById(id_base) : await getAllBases();
       res.status(200).json(query);
