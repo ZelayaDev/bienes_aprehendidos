@@ -17,6 +17,8 @@ app.use(cors());
 app.use(helmet());
 app.use(compression());
 
+//server escuchando
+
 const port = process.env.PORT || 5000;
 app.listen(port, (error) => {
   if (error) throw error;
