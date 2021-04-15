@@ -1,4 +1,3 @@
-const { response } = require("express");
 const { database } = require("../../database/database");
 
 const getAllTipologia = async () => {
@@ -29,20 +28,20 @@ const insertTipologia = async (abreviatura, descripcion) => {
     .max("Orden_Tipologia as orden")
     .from("tipologia_aeronaval")
     .then((response) => {
-         return database("tipologia_aeronaval")
-           .insert({
-             Orden_Tipologia: response.length === 0 ? 1 : response[0].orden + 0.5,
-             Estatus_Tipologia: 1,
-             Abreviatura_Tipologia: abreviatura,
-             Descripcion_Tipologia: descripcion,
-           })
-           .then((response) => {
-             return response;
-           })
-           .catch((error) => {
-             console.log(error);
-             return error;
-           });
+      return database("tipologia_aeronaval")
+        .insert({
+          Orden_Tipologia: response.length === 0 ? 1 : response[0].orden + 0.5,
+          Estatus_Tipologia: 1,
+          Abreviatura_Tipologia: abreviatura,
+          Descripcion_Tipologia: descripcion,
+        })
+        .then((response) => {
+          return response;
+        })
+        .catch((error) => {
+          console.log(error);
+          return error;
+        });
     })
     .catch((err) => err);
 };

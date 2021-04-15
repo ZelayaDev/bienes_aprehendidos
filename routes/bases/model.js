@@ -1,4 +1,3 @@
-const { response } = require("express");
 const { database } = require("../../database/database");
 
 const getAllBases = async () => {
@@ -9,24 +8,24 @@ const getAllBases = async () => {
       "c.nombre_zona",
       "d.Nombre_Provincia",
       "e.Descripcion_Tipologia",
-      "e.Abreviatura_Tipologia"
+      "e.Abreviatura_Tipologia",
     )
     .from("bases_aeronaval as a")
     .innerJoin(
       "regiones_aeronaval as b",
       "b.Id_Region_Aeronaval",
-      "a.Id_Region"
+      "a.Id_Region",
     )
     .innerJoin("zonas_aeronaval as c", "a.Id_Zona", "c.Id_Zona_Aeronaval")
     .innerJoin(
       "provincias_aeronaval as d",
       "a.Id_Provincia",
-      "d.Id_Provincia_Aeronaval"
+      "d.Id_Provincia_Aeronaval",
     )
     .innerJoin(
       "tipologia_aeronaval as e",
       "a.Id_Tipologia",
-      "e.Id_Tipologia_Aeronaval"
+      "e.Id_Tipologia_Aeronaval",
     )
     .orderBy("a.Id_Region", "a.Orden_Base")
     .then((bases) => {
@@ -45,24 +44,24 @@ const getBasesbyIdRegion = async (id_region) => {
       "c.nombre_zona",
       "d.Nombre_Provincia",
       "e.Descripcion_Tipologia",
-      "e.Abreviatura_Tipologia"
+      "e.Abreviatura_Tipologia",
     )
     .from("bases_aeronaval as a")
     .innerJoin(
       "regiones_aeronaval as b",
       "b.Id_Region_Aeronaval",
-      "a.Id_Region"
+      "a.Id_Region",
     )
     .innerJoin("zonas_aeronaval as c", "a.Id_Zona", "c.Id_Zona_Aeronaval")
     .innerJoin(
       "provincias_aeronaval as d",
       "a.Id_Provincia",
-      "d.Id_Provincia_Aeronaval"
+      "d.Id_Provincia_Aeronaval",
     )
     .innerJoin(
       "tipologia_aeronaval as e",
       "a.Id_Tipologia",
-      "e.Id_Tipologia_Aeronaval"
+      "e.Id_Tipologia_Aeronaval",
     )
     .where("b.Id_Region_Aeronaval", "=", id_region)
     .orderBy("a.Id_Region", "a.Orden_Base")
@@ -80,7 +79,7 @@ const insertBases = async (
   id_tipologia,
   id_zona,
   nombre_Base,
-  status
+  status,
 ) => {
   return database
     .max("Orden_Base as orden")
@@ -114,7 +113,7 @@ const updateBases = (
   id_zona,
   nombre_Base,
   orden_base,
-  id_base
+  id_base,
 ) => {
   return database
     .select("*")

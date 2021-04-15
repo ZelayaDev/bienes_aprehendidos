@@ -1,4 +1,3 @@
-const { response } = require("express");
 const { database } = require("../../database/database");
 
 const getAllZonas = async () => {
@@ -8,7 +7,7 @@ const getAllZonas = async () => {
     .innerJoin(
       "regiones_aeronaval as b",
       "b.Id_Region_Aeronaval",
-      "a.Id_Region"
+      "a.Id_Region",
     )
     .orderBy("a.Id_Region", "a.Orden_Zona")
     .then((zonas) => {
@@ -26,7 +25,7 @@ const getZonasbyIdRegion = async (id_region) => {
     .innerJoin(
       "regiones_aeronaval as b",
       "b.Id_Region_Aeronaval",
-      "a.Id_Region"
+      "a.Id_Region",
     )
     .where("a.Id_Region", "=", id_region)
     .orderBy("a.Id_Region", "a.Orden_Zona")
