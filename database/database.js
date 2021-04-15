@@ -1,12 +1,17 @@
 const knex = require("knex");
 
+const host = process.env.HOST_BIENES;
+const user = process.env.USER_BIENES;
+const password = process.env.PASSWORD_BIENES;
+const dabataseName = process.env.DATABASE_BIENES;
+
 const database = knex({
   client: "mysql",
   connection: {
-    host: "10.2.11.7",
-    user: "aeronaval",
-    password: "123456",
-    database: "bienes_aprehendidos",
+    host: host,
+    user: user,
+    password: password,
+    database: dabataseName,
   },
 });
 
