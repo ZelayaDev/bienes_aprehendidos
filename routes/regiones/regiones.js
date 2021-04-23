@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const {
   getAllRegion,
+  getAllRegionPaginado,
+  resultadoPaginado,
   insertRegiones,
   updateRegiones,
   activaDesactivaRegion,
@@ -9,11 +11,19 @@ const {
 
 router
   .get("/", async (req, res) => {
-    const { id_region } = req.query;
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+    const atrib = req.query.atrib;
+    const order = req.query.order;
     try {
-      const query = id_region
-        ? await getregionById(id_region)
-        : await getAllRegion();
+      const query = await resultadoPaginado(
+        page,
+        limit,
+        getAllRegion,
+        getAllRegionPaginado,
+        atrib,
+        order,
+      );
       res.status(200).json(query);
     } catch (error) {
       res.status(500).json("Error");
@@ -37,7 +47,7 @@ router
       const update = await updateRegiones(
         nombre_region,
         orden_region,
-        id_region
+        id_region,
       );
       if (
         update === "Region ya existe" ||

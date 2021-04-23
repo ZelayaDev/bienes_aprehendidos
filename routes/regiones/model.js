@@ -4,13 +4,63 @@ const getAllRegion = async () => {
   return database
     .select("*")
     .from("regiones_aeronaval")
-    .orderBy("Orden_Region")
     .then((region) => {
       return region;
     })
     .catch((error) => {
       return error;
     });
+};
+
+const getAllRegionPaginado = async (limit, offset, atrib, order) => {
+  return database
+    .select("*")
+    .from("regiones_aeronaval")
+    .limit(limit)
+    .offset(offset)
+    .orderBy(atrib, order)
+    .then((region) => {
+      return region;
+    })
+    .catch((error) => {
+      return error;
+    });
+};
+
+const resultadoPaginado = async (
+  page,
+  limit,
+  getAll,
+  getWithPages,
+  atrib,
+  order,
+) => {
+  const offset = limit * page - limit;
+
+  const endIndex = page * limit;
+
+  const results = {};
+
+  const total = await getAll();
+
+  results.total = total.length;
+
+  if (endIndex < total.length) {
+    results.next = {
+      page: page + 1,
+      limit: limit,
+    };
+  }
+
+  if (page > 1) {
+    results.previous = {
+      page: page - 1,
+      limit: limit,
+    };
+  }
+
+  results.results = await getWithPages(limit, offset, atrib, order);
+  return results;
 };
 
 const insertRegiones = async (nombre_region) => {
@@ -107,3 +157,5 @@ module.exports.insertRegiones = insertRegiones;
 module.exports.updateRegiones = updateRegiones;
 module.exports.activaDesactivaRegion = activaDesactivaRegion;
 module.exports.getregionById = getregionById;
+module.exports.getAllRegionPaginado = getAllRegionPaginado;
+module.exports.resultadoPaginado = resultadoPaginado;
