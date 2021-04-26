@@ -12,10 +12,11 @@ const getAllRegion = async () => {
     });
 };
 
-const getAllRegionPaginado = async (limit, offset, atrib, order) => {
+const getAllRegionPaginado = async (limit, offset, atrib, order, texto) => {
   return database
     .select("*")
     .from("regiones_aeronaval")
+    .where("Nombre_Region", "like", `%${texto}%`)
     .limit(limit)
     .offset(offset)
     .orderBy(atrib, order)
@@ -34,6 +35,7 @@ const resultadoPaginado = async (
   getWithPages,
   atrib,
   order,
+  texto
 ) => {
   const offset = limit * page - limit;
 
@@ -59,7 +61,7 @@ const resultadoPaginado = async (
     };
   }
 
-  results.results = await getWithPages(limit, offset, atrib, order);
+  results.results = await getWithPages(limit, offset, atrib, order, texto);
   return results;
 };
 

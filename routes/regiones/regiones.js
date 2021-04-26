@@ -15,6 +15,7 @@ router
     const limit = parseInt(req.query.limit);
     const atrib = req.query.atrib;
     const order = req.query.order;
+    const texto = req.query.text;
     try {
       const query = await resultadoPaginado(
         page,
@@ -23,6 +24,7 @@ router
         getAllRegionPaginado,
         atrib,
         order,
+        texto
       );
       res.status(200).json(query);
     } catch (error) {
@@ -47,7 +49,7 @@ router
       const update = await updateRegiones(
         nombre_region,
         orden_region,
-        id_region,
+        id_region
       );
       if (
         update === "Region ya existe" ||

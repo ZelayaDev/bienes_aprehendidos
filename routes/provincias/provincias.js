@@ -6,6 +6,7 @@ const {
   validarProvincias,
   validarRegion,
   activaDesactivaProvincia,
+  updateProvincias,
 } = require("./model");
 
 router
@@ -29,6 +30,10 @@ router
       const busquedaProvincia = await validarProvincias(nombre_provincia);
       if (busquedaProvincia.length)
         return res.status(406).json("Provincia existe");
+
+      const busquedaRegion = await validarRegion(id_region);
+      if (busquedaRegion.length === 0)
+        return res.status(406).json("Region no esta matriculada");
 
       await insertProvincias(id_region, nombre_provincia);
       res.status(200).json("Registro Creado");

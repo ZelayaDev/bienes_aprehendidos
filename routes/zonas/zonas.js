@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const {
   getAllZonas,
+  getAllZonasPaginado,
+  resultadoZonasPaginado,
   getZonasbyIdRegion,
   insertZonas,
   validarZona,

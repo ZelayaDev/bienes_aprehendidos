@@ -7,7 +7,7 @@ const getAllZonas = async () => {
     .innerJoin(
       "regiones_aeronaval as b",
       "b.Id_Region_Aeronaval",
-      "a.Id_Region",
+      "a.Id_Region"
     )
     .orderBy("a.Id_Region", "a.Orden_Zona")
     .then((zonas) => {
@@ -18,6 +18,64 @@ const getAllZonas = async () => {
     });
 };
 
+//PAGINADO
+
+const getAllZonasPaginado = async (limit, offset, atrib, order) => {
+  return database
+    .select("a.*", "b.Nombre_Region")
+    .from("zonas_aeronaval as a")
+    .innerJoin(
+      "regiones_aeronaval as b",
+      "b.Id_Region_Aeronaval",
+      "a.Id_Region"
+    )
+    .limit(limit)
+    .offset(offset)
+    .orderBy(atrib, order)
+    .then((zonas) => {
+      return zonas;
+    })
+    .catch((error) => {
+      return error;
+    });
+};
+
+const resultadoPaginadoZonas = async (
+  page,
+  limit,
+  getAll,
+  getWithPages,
+  atrib,
+  order
+) => {
+  const offset = limit * page - limit;
+
+  const endIndex = page * limit;
+
+  const results = {};
+
+  const total = await getAll();
+
+  results.total = total.length;
+
+  if (endIndex < total.length) {
+    results.next = {
+      page: page + 1,
+      limit: limit,
+    };
+  }
+
+  if (page > 1) {
+    results.previous = {
+      page: page - 1,
+      limit: limit,
+    };
+  }
+
+  results.results = await getWithPages(limit, offset, atrib, order);
+  return results;
+};
+
 const getZonasbyIdRegion = async (id_region) => {
   return database
     .select("a.*", "b.Nombre_Region")
@@ -25,7 +83,7 @@ const getZonasbyIdRegion = async (id_region) => {
     .innerJoin(
       "regiones_aeronaval as b",
       "b.Id_Region_Aeronaval",
-      "a.Id_Region",
+      "a.Id_Region"
     )
     .where("a.Id_Region", "=", id_region)
     .orderBy("a.Id_Region", "a.Orden_Zona")
@@ -134,3 +192,5 @@ module.exports.updateZonas = updateZonas;
 module.exports.insertZonas = insertZonas;
 module.exports.activaDesactivaZonas = activaDesactivaZonas;
 module.exports.validarZona = validarZona;
+module.exports.getAllZonasPaginado = getAllZonasPaginado;
+module.exports.resultadoPaginadoZonas = resultadoPaginadoZonas;
