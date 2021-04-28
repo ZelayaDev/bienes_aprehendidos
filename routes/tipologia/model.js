@@ -13,6 +13,59 @@ const getAllTipologia = async () => {
     });
 };
 
+const getAllTipologiaPaginado = async (limit, offset, atrib, order, texto) => {
+  return database
+    .select("*")
+    .from("tipologia_aeronaval")
+    .where("Descripcion_Tipologia", "like", `%${texto}%`)
+    .limit(limit)
+    .offset(offset)
+    .orderBy(atrib, order)
+    .then((tipologia) => {
+      return tipologia;
+    })
+    .catch((error) => {
+      return error;
+    });
+};
+
+const resultadoTipologiaPaginado = async (
+  page,
+  limit,
+  getAll,
+  getWithPages,
+  atrib,
+  order,
+  texto
+) => {
+  const offset = limit * page - limit;
+
+  const endIndex = page * limit;
+
+  const results = {};
+
+  const total = await getAll();
+
+  results.total = total.length;
+
+  if (endIndex < total.length) {
+    results.next = {
+      page: page + 1,
+      limit: limit,
+    };
+  }
+
+  if (page > 1) {
+    results.previous = {
+      page: page - 1,
+      limit: limit,
+    };
+  }
+
+  results.results = await getWithPages(limit, offset, atrib, order, texto);
+  return results;
+};
+
 const getTipologiabyId = async (id_tipologia) => {
   return database
     .select("*")
@@ -129,3 +182,5 @@ module.exports.insertTipologia = insertTipologia;
 module.exports.updateTipologia = updateTipologia;
 module.exports.validarTipologia = validarTipologia;
 module.exports.activaDesactivaTipologia = activaDesactivaTipologia;
+module.exports.getAllTipologiaPaginado = getAllTipologiaPaginado;
+module.exports.resultadoTipologiaPaginado = resultadoTipologiaPaginado;

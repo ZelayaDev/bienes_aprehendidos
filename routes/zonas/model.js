@@ -18,12 +18,11 @@ const getAllZonas = async () => {
     });
 };
 
-//PAGINADO
-
-const getAllZonasPaginado = async (limit, offset, atrib, order) => {
+const getAllZonasPaginado = async (limit, offset, atrib, order, texto) => {
   return database
     .select("a.*", "b.Nombre_Region")
     .from("zonas_aeronaval as a")
+    .where("Nombre_Zona", "like", `%${texto}%`)
     .innerJoin(
       "regiones_aeronaval as b",
       "b.Id_Region_Aeronaval",
@@ -46,7 +45,8 @@ const resultadoPaginadoZonas = async (
   getAll,
   getWithPages,
   atrib,
-  order
+  order,
+  texto
 ) => {
   const offset = limit * page - limit;
 
@@ -72,7 +72,7 @@ const resultadoPaginadoZonas = async (
     };
   }
 
-  results.results = await getWithPages(limit, offset, atrib, order);
+  results.results = await getWithPages(limit, offset, atrib, order, texto);
   return results;
 };
 

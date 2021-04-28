@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const {
   getAllZonas,
-  getAllZonasPaginado,
-  resultadoZonasPaginado,
   getZonasbyIdRegion,
+  getAllZonasPaginado,
+  resultadoPaginadoZonas,
   insertZonas,
   validarZona,
   updateZonas,
@@ -12,11 +12,21 @@ const {
 
 router
   .get("/", async (req, res) => {
-    const { id_region } = req.query;
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+    const atrib = req.query.atrib;
+    const order = req.query.order;
+    const texto = req.query.text;
     try {
-      const query = id_region
-        ? await getZonasbyIdRegion(id_region)
-        : await getAllZonas();
+      const query = await resultadoPaginadoZonas(
+        page,
+        limit,
+        getAllZonas,
+        getAllZonasPaginado,
+        atrib,
+        order,
+        texto
+      );
       res.status(200).json(query);
     } catch (error) {
       res.status(500).json("Error");

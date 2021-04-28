@@ -7,7 +7,7 @@ const getAllProvincias = async () => {
     .innerJoin(
       "regiones_aeronaval as b",
       "b.Id_Region_Aeronaval",
-      "a.Id_Region",
+      "a.Id_Region"
     )
     .orderBy("a.Orden_Provincia")
     .then((provincias) => {
@@ -18,6 +18,65 @@ const getAllProvincias = async () => {
     });
 };
 
+const getAllProvinciaPaginado = async (limit, offset, atrib, order, texto) => {
+  return database
+    .select("*")
+    .select("a.*", "b.Nombre_Region")
+    .from("provincias_aeronaval as a")
+    .innerJoin(
+      "regiones_aeronaval as b",
+      "b.Id_Region_Aeronaval",
+      "a.Id_Region"
+    )
+    .where("Nombre_Provincia", "like", `%${texto}%`)
+    .limit(limit)
+    .offset(offset)
+    .orderBy(atrib, order)
+    .then((provincia) => {
+      return provincia;
+    })
+    .catch((error) => {
+      return error;
+    });
+};
+
+const resultadoProvinciaPaginado = async (
+  page,
+  limit,
+  getAll,
+  getWithPages,
+  atrib,
+  order,
+  texto
+) => {
+  const offset = limit * page - limit;
+
+  const endIndex = page * limit;
+
+  const results = {};
+
+  const total = await getAll();
+
+  results.total = total.length;
+
+  if (endIndex < total.length) {
+    results.next = {
+      page: page + 1,
+      limit: limit,
+    };
+  }
+
+  if (page > 1) {
+    results.previous = {
+      page: page - 1,
+      limit: limit,
+    };
+  }
+
+  results.results = await getWithPages(limit, offset, atrib, order, texto);
+  return results;
+};
+
 const getProvinciasbyIdRegion = async (id_region) => {
   return database
     .select("a.*", "b.Nombre_Region")
@@ -25,7 +84,7 @@ const getProvinciasbyIdRegion = async (id_region) => {
     .innerJoin(
       "regiones_aeronaval as b",
       "b.Id_Region_Aeronaval",
-      "a.Id_Region",
+      "a.Id_Region"
     )
     .where("b.Id_Region_Aeronaval", "=", id_region)
     .orderBy("a.Orden_Provincia")
@@ -145,3 +204,5 @@ module.exports.validarProvincias = validarProvincias;
 module.exports.updateProvincias = updateProvincias;
 module.exports.activaDesactivaProvincia = activaDesactivaProvincia;
 module.exports.validarRegion = validarRegion;
+module.exports.getAllProvinciaPaginado = getAllProvinciaPaginado;
+module.exports.resultadoProvinciaPaginado = resultadoProvinciaPaginado;

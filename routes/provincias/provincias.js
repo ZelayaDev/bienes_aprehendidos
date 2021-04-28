@@ -1,23 +1,35 @@
 const router = require("express").Router();
 const {
   getAllProvincias,
+  getAllProvinciaPaginado,
+  resultadoProvinciaPaginado,
   getProvinciasbyIdRegion,
   insertProvincias,
   validarProvincias,
   validarRegion,
   activaDesactivaProvincia,
-  updateProvincias,
 } = require("./model");
 
 router
   .get("/", async (req, res) => {
-    console.log(req.query);
-    if (req.query === "region") {
-      const provincias = await getProvinciasbyIdRegion(req.query.region);
-      res.status(200).json(provincias);
-    } else {
-      const provincias = await getAllProvincias();
-      res.status(200).json(provincias);
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+    const atrib = req.query.atrib;
+    const order = req.query.order;
+    const texto = req.query.text;
+    try {
+      const query = await resultadoProvinciaPaginado(
+        page,
+        limit,
+        getAllProvincias,
+        getAllProvinciaPaginado,
+        atrib,
+        order,
+        texto
+      );
+      res.status(200).json(query);
+    } catch (error) {
+      res.status(500).json("Error");
     }
   })
   .post("/", async (req, res) => {
@@ -30,10 +42,6 @@ router
       const busquedaProvincia = await validarProvincias(nombre_provincia);
       if (busquedaProvincia.length)
         return res.status(406).json("Provincia existe");
-
-      const busquedaRegion = await validarRegion(id_region);
-      if (busquedaRegion.length === 0)
-        return res.status(406).json("Region no esta matriculada");
 
       await insertProvincias(id_region, nombre_provincia);
       res.status(200).json("Registro Creado");
