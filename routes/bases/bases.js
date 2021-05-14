@@ -3,6 +3,8 @@ const router = require("express").Router();
 const {
   getAllBases,
   getBasesbyIdRegion,
+  getAllBasesPaginado,
+  resultadoPaginadoBases,
   insertBases,
   updateBases,
   validarBases,
@@ -12,9 +14,21 @@ const {
 
 router
   .get("/", async (req, res) => {
-    const { id_base } = req.query;
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+    const atrib = req.query.atrib;
+    const order = req.query.order;
+    const texto = req.query.text;
     try {
-      const query = id_base ? await getbaseById(id_base) : await getAllBases();
+      const query = await resultadoPaginadoBases(
+        page,
+        limit,
+        getAllBases,
+        getAllBasesPaginado,
+        atrib,
+        order,
+        texto
+      );
       res.status(200).json(query);
     } catch (error) {
       res.status(500).json("Error");
@@ -23,13 +37,8 @@ router
   .post("/", async (req, res) => {
     console.log(req.body);
 
-    const {
-      id_region,
-      id_provincia,
-      id_tipologia,
-      id_zona,
-      nombre_Base,
-    } = req.body;
+    const { id_region, id_provincia, id_tipologia, id_zona, nombre_Base } =
+      req.body;
     const status = 1;
 
     try {

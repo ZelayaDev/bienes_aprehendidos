@@ -8,24 +8,24 @@ const getAllBases = async () => {
       "c.nombre_zona",
       "d.Nombre_Provincia",
       "e.Descripcion_Tipologia",
-      "e.Abreviatura_Tipologia",
+      "e.Abreviatura_Tipologia"
     )
     .from("bases_aeronaval as a")
     .innerJoin(
       "regiones_aeronaval as b",
       "b.Id_Region_Aeronaval",
-      "a.Id_Region",
+      "a.Id_Region"
     )
     .innerJoin("zonas_aeronaval as c", "a.Id_Zona", "c.Id_Zona_Aeronaval")
     .innerJoin(
       "provincias_aeronaval as d",
       "a.Id_Provincia",
-      "d.Id_Provincia_Aeronaval",
+      "d.Id_Provincia_Aeronaval"
     )
     .innerJoin(
       "tipologia_aeronaval as e",
       "a.Id_Tipologia",
-      "e.Id_Tipologia_Aeronaval",
+      "e.Id_Tipologia_Aeronaval"
     )
     .orderBy("a.Id_Region", "a.Orden_Base")
     .then((bases) => {
@@ -36,6 +36,81 @@ const getAllBases = async () => {
     });
 };
 
+const getAllBasesPaginado = async (limit, offset, atrib, order, texto) => {
+  return database
+    .select(
+      "a.*",
+      "b.Nombre_Region",
+      "c.nombre_zona",
+      "d.Nombre_Provincia",
+      "e.Descripcion_Tipologia",
+      "e.Abreviatura_Tipologia"
+    )
+    .from("bases_aeronaval as a")
+    .innerJoin(
+      "regiones_aeronaval as b",
+      "b.Id_Region_Aeronaval",
+      "a.Id_Region"
+    )
+    .innerJoin("zonas_aeronaval as c", "a.Id_Zona", "c.Id_Zona_Aeronaval")
+    .innerJoin(
+      "provincias_aeronaval as d",
+      "a.Id_Provincia",
+      "d.Id_Provincia_Aeronaval"
+    )
+    .innerJoin(
+      "tipologia_aeronaval as e",
+      "a.Id_Tipologia",
+      "e.Id_Tipologia_Aeronaval"
+    )
+    .limit(limit)
+    .offset(offset)
+    .orderBy(atrib, order)
+    .then((bases) => {
+      return bases;
+    })
+    .catch((error) => {
+      return error;
+    });
+};
+
+const resultadoPaginadoBases = async (
+  page,
+  limit,
+  getAll,
+  getWithPages,
+  atrib,
+  order,
+  texto
+) => {
+  const offset = limit * page - limit;
+
+  const endIndex = page * limit;
+
+  const results = {};
+
+  const total = await getAll();
+
+  results.total = total.length;
+
+  if (endIndex < total.length) {
+    results.next = {
+      page: page + 1,
+      limit: limit,
+    };
+  }
+
+  if (page > 1) {
+    results.previous = {
+      page: page - 1,
+      limit: limit,
+    };
+  }
+
+  results.results = await getWithPages(limit, offset, atrib, order, texto);
+  return results;
+};
+
 const getBasesbyIdRegion = async (id_region) => {
   return database
     .select(
@@ -44,24 +119,24 @@ const getBasesbyIdRegion = async (id_region) => {
       "c.nombre_zona",
       "d.Nombre_Provincia",
       "e.Descripcion_Tipologia",
-      "e.Abreviatura_Tipologia",
+      "e.Abreviatura_Tipologia"
     )
     .from("bases_aeronaval as a")
     .innerJoin(
       "regiones_aeronaval as b",
       "b.Id_Region_Aeronaval",
-      "a.Id_Region",
+      "a.Id_Region"
     )
     .innerJoin("zonas_aeronaval as c", "a.Id_Zona", "c.Id_Zona_Aeronaval")
     .innerJoin(
       "provincias_aeronaval as d",
       "a.Id_Provincia",
-      "d.Id_Provincia_Aeronaval",
+      "d.Id_Provincia_Aeronaval"
     )
     .innerJoin(
       "tipologia_aeronaval as e",
       "a.Id_Tipologia",
-      "e.Id_Tipologia_Aeronaval",
+      "e.Id_Tipologia_Aeronaval"
     )
     .where("b.Id_Region_Aeronaval", "=", id_region)
     .orderBy("a.Id_Region", "a.Orden_Base")
@@ -79,7 +154,7 @@ const insertBases = async (
   id_tipologia,
   id_zona,
   nombre_Base,
-  status,
+  status
 ) => {
   return database
     .max("Orden_Base as orden")
@@ -113,7 +188,7 @@ const updateBases = (
   id_zona,
   nombre_Base,
   orden_base,
-  id_base,
+  id_base
 ) => {
   return database
     .select("*")
@@ -201,3 +276,5 @@ module.exports.updateBases = updateBases;
 module.exports.validarBases = validarBases;
 module.exports.activaDesactivaBase = activaDesactivaBase;
 module.exports.getbaseById = getbaseById;
+module.exports.getAllBasesPaginado = getAllBasesPaginado;
+module.exports.resultadoPaginadoBases = resultadoPaginadoBases;

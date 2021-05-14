@@ -14,6 +14,60 @@ const getAllMarcas = async () => {
     });
 };
 
+const getAllMarcasPaginado = async (limit, offset, atrib, order, texto) => {
+  return database
+    .select("a.*", "b.Nombre_Medio")
+    .from("marcas_aeronaval as a")
+    .innerJoin("medios_transporte as b", "b.Id_Medio_Transporte", "a.Id_Medio")
+    .where("a.Nombre_Marca", "like", `%${texto}%`)
+    .limit(limit)
+    .offset(offset)
+    .orderBy(atrib, order)
+    .then((marca) => {
+      return marca;
+    })
+    .catch((error) => {
+      return error;
+    });
+};
+
+const resultadoPaginadoMarcas = async (
+  page,
+  limit,
+  getAll,
+  getWithPages,
+  atrib,
+  order,
+  texto
+) => {
+  const offset = limit * page - limit;
+
+  const endIndex = page * limit;
+
+  const results = {};
+
+  const total = await getAll();
+
+  results.total = total.length;
+
+  if (endIndex < total.length) {
+    results.next = {
+      page: page + 1,
+      limit: limit,
+    };
+  }
+
+  if (page > 1) {
+    results.previous = {
+      page: page - 1,
+      limit: limit,
+    };
+  }
+
+  results.results = await getWithPages(limit, offset, atrib, order, texto);
+  return results;
+};
+
 const getMarcasbyIdMedio = async (id_medio) => {
   return database
     .select("a.*", "b.Nombre_Medio")
@@ -136,3 +190,5 @@ module.exports.validarMarca = validarMarca;
 module.exports.updateMarcas = updateMarcas;
 module.exports.activaDesactivaMarcas = activaDesactivaMarcas;
 module.exports.validarMedio = validarMedio;
+module.exports.getAllMarcasPaginado = getAllMarcasPaginado;
+module.exports.resultadoPaginadoMarcas = resultadoPaginadoMarcas;

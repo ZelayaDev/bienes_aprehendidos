@@ -2,6 +2,8 @@ const router = require("express").Router();
 const {
   getAllMarcas,
   getMarcasbyIdMedio,
+  getAllMarcasPaginado,
+  resultadoPaginadoMarcas,
   insertMarcas,
   validarMarca,
   updateMarcas,
@@ -11,13 +13,24 @@ const {
 
 router
   .get("/", async (req, res) => {
-    console.log(req.query);
-    if (req.query === "medio") {
-      const marcas = await getMarcasbyIdMedio(req.query.medio);
-      res.status(200).json(marcas);
-    } else {
-      const marcas = await getAllMarcas();
-      res.status(200).json(marcas);
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+    const atrib = req.query.atrib;
+    const order = req.query.order;
+    const texto = req.query.text;
+    try {
+      const query = await resultadoPaginadoMarcas(
+        page,
+        limit,
+        getAllMarcas,
+        getAllMarcasPaginado,
+        atrib,
+        order,
+        texto
+      );
+      res.status(200).json(query);
+    } catch (error) {
+      res.status(500).json("Error");
     }
   })
   .post("/", async (req, res) => {
